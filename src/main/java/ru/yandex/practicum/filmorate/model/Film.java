@@ -17,13 +17,17 @@ import java.time.LocalDate;
 @Validated
 public class Film implements Entities {
     private int id;
+    @NonNull
     @NotBlank(message = "cannot be empty")
     private String name;
     @Size(max = 200)
+    @NonNull
     private String description;
     @CheckData
+    @NonNull
     private LocalDate releaseDate;
     @Positive(message = "must be greater than 0")
+    @NonNull
     private int duration;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
