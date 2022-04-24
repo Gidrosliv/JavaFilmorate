@@ -22,12 +22,11 @@ public class Film implements Entities {
     private String name;
     @Size(max = 200)
     @NonNull
+    @NotBlank(message = "cannot be empty")
     private String description;
     @CheckData
-    @NonNull
     private LocalDate releaseDate;
     @Positive(message = "must be greater than 0")
-    @NonNull
     private int duration;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
