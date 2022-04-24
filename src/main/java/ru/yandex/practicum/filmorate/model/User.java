@@ -17,10 +17,11 @@ import java.time.LocalDate;
 @Validated
 public class User implements Entities {
     @NotBlank(message = "cannot be empty")
+    @Pattern(regexp = "\\S+")
     private String login;
     private String name;
     @Email
-    @Pattern(regexp = "\\S+")
+    @NotBlank
     private String email;
     @Past(message = "cannot be in the future")
     private LocalDate birthday;

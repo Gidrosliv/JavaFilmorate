@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.annotation.CheckData;
 import ru.yandex.practicum.filmorate.controllers.FilmController;
@@ -17,9 +18,12 @@ import java.time.LocalDate;
 @Validated
 public class Film implements Entities {
     private int id;
+    @NonNull
     @NotBlank(message = "cannot be empty")
     private String name;
     @Size(max = 200)
+    @NonNull
+    @NotBlank(message = "cannot be empty")
     private String description;
     @CheckData
     private LocalDate releaseDate;
