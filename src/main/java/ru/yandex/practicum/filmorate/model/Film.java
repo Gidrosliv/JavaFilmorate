@@ -14,7 +14,6 @@ import java.time.LocalDate;
 
 
 @Data
-@NoArgsConstructor
 @Validated
 public class Film implements Entities {
     private int id;
