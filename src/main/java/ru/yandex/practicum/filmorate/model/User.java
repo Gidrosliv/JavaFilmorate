@@ -1,49 +1,42 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
+import ru.yandex.practicum.filmorate.controllers.UserController;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
-
-import static ru.yandex.practicum.filmorate.controllers.UserController.userIdGen;
 
 
 @Getter
 @Setter
 @ToString
 @Validated
-public class User {
-    @NotBlank
-    @NotNull(message = "login cannot be empty")
+public class User implements Entities {
+    @NotBlank(message = "cannot be empty")
     private String login;
-    @NotBlank//TODO
-    @NotNull(message = "name cannot be empty")
     private String name;
     @Email
-    @NotNull
+    @Pattern(regexp = "\\S+")
     private String email;
-    @Past
-    @NotNull
+    @Past(message = "cannot be in the future")
     private LocalDate birthday;
     private int id;
 
 
     public User(String login, String name, String email, LocalDate birthday) {
         this.login = login;
-        if (name == null || name.isEmpty()){
-            this.name = name;
-        }else{
+        if (name == null || name.isEmpty() || name.isBlank()) {
             this.name = login;
+        } else {
+            this.name = name;
         }
         this.email = email;
         this.birthday = birthday;
-        this.id = userIdGen();
+        this.id = UserController.idGenerator();
     }
 
     @Override
