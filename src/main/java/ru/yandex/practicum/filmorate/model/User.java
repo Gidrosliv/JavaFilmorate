@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
@@ -9,6 +8,8 @@ import ru.yandex.practicum.filmorate.controllers.UserController;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -25,8 +26,9 @@ public class User implements Entities {
     private String email;
     @Past(message = "cannot be in the future")
     private LocalDate birthday;
+    @Positive(message = "must be greater than 0")
     private int id;
-
+    Set<Integer> friends = new HashSet<>();
 
     public User(String login, String name, String email, LocalDate birthday) {
         this.login = login;
@@ -62,6 +64,14 @@ public class User implements Entities {
         return result;
     }
 
+
+    public void setFriends(int friendId) {
+        this.friends.add(friendId);
+    }
+
+    public void removeFriend(int friendId) {
+        this.friends.remove((Integer) friendId);
+    }
 
 }
 
