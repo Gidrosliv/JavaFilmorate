@@ -1,38 +1,80 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.InvalidUserIdException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+@Slf4j
 @Service
-public class UserService {
+public class UserService{
+    InMemoryUserStorage inMemoryUserStorage;
+
+    UserService(InMemoryUserStorage inMemoryUserStorage) {
+        this.inMemoryUserStorage = inMemoryUserStorage;
+    }
+
+    public User create(User user) {
+        return inMemoryUserStorage.users.put(user.getId(), user);
+    }
+
+    public User update(User user) {
+        return inMemoryUserStorage.update(user);
+    }
+
+    public void delete(User user) {
+        inMemoryUserStorage.delete(user);
+    }
+
+    public User getUser(int id) {
+        return inMemoryUserStorage.getUser(id);
+    }
+
+    public Collection<User> list() {
+        return inMemoryUserStorage.list();
+    }
 
     public void addFriend(int id, int friendId) {
-        InMemoryUserStorage.users.values()
+        if (id <= 0) {
+            throw new InvalidUserIdException("The user ID cannot be negative.");
+        }
+        if (friendId <= 0) {
+            throw new InvalidUserIdException("The user ID cannot be negative.");
+        }
+        inMemoryUserStorage.users.values()
                 .stream()
                 .filter(user -> user.getId() == id)
                 .forEach(user -> user.setFriends(friendId));
+        log.info("user with friendId={} has been added as a friend", friendId);
     }
 
     public void deleteFriend(int id, int friendId) {
-        InMemoryUserStorage.users.values().stream()
+        if (id <= 0) {
+            throw new InvalidUserIdException("The user ID cannot be negative.");
+        }
+        if (friendId <= 0) {
+            throw new InvalidUserIdException("The user ID cannot be negative.");
+        }
+        inMemoryUserStorage.users.values().stream()
                 .filter(user -> user.getId() == id)
                 .forEach(user -> user.removeFriend(friendId));
+        log.info("user with friendId={} has been deleted from a friend", friendId);
     }
 
     public List<User> getFriends(int id) {
+        if (id <= 0) {
+            throw new InvalidUserIdException("The user ID cannot be negative.");
+        }
         List<User> friends = new ArrayList<>();
         Set<Integer> friendIdList;
-        for (User x : InMemoryUserStorage.users.values()) {
+        for (User x : inMemoryUserStorage.users.values()) {
             if (x.getId() == id) {
                 friendIdList = x.getFriends();
                 for (Integer y : friendIdList) {
-                    for (User friend : InMemoryUserStorage.users.values()) {
+                    for (User friend : inMemoryUserStorage.users.values()) {
                         if (friend.getId() == y) {
                             friends.add(friend);
                         }
@@ -40,21 +82,27 @@ public class UserService {
                 }
             }
         }
-
+        log.info("user id={} friends list", id);
         return friends;
     }
 
     public List<User> mutualFriends(int id, int otherId) {
+        if (id <= 0) {
+            throw new InvalidUserIdException("The user ID cannot be negative.");
+        }
+        if (otherId <= 0) {
+            throw new InvalidUserIdException("The otherId ID cannot be negative.");
+        }
         List<User> mutualFriends = new ArrayList<>();
         Set<Integer> idFriends = new HashSet<>();
         Set<Integer> otherIdFriends = new HashSet<>();
-        for (User x : InMemoryUserStorage.users.values()) {
+        for (User x : inMemoryUserStorage.users.values()) {
             if (x.getId() == id) {
                 idFriends = x.getFriends();
             }
         }
 
-        for (User x : InMemoryUserStorage.users.values()) {
+        for (User x : inMemoryUserStorage.users.values()) {
             if (x.getId() == otherId) {
                 otherIdFriends = x.getFriends();
             }
@@ -63,7 +111,7 @@ public class UserService {
         for (Integer x : idFriends) {
             for (Integer y : otherIdFriends) {
                 if (x == y) {
-                    for (User friend : InMemoryUserStorage.users.values()) {
+                    for (User friend : inMemoryUserStorage.users.values()) {
                         if (friend.getId() == x) {
                             mutualFriends.add(friend);
                         }
@@ -71,8 +119,16 @@ public class UserService {
                 }
             }
         }
+        log.info("list of mutual friends");
         return mutualFriends;
     }
 
+    public int getUsersSize() {
+        log.info("got a list of sizes");
+        return inMemoryUserStorage.users.size();
+    }
+
 }
+
+
 

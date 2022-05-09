@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,64 +14,57 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/films")
 public class FilmController {
-    static InMemoryFilmStorage inMemoryFilmStorage;
+    static FilmService filmService;
     static int id = 0;
 
-    FilmController(InMemoryFilmStorage inMemoryFilmStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
+    FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        inMemoryFilmStorage.create(film);
-        log.info("field with type {} and id={} added.", film.getClass(), film.getId());
+        filmService.create(film);
         return film;
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        inMemoryFilmStorage.update(film);
-        log.info("field  with id={} updated: {}", film.getId(), film.getClass());
+        filmService.update(film);
         return film;
     }
 
     @GetMapping(value = "/{id}")
     public Film getFilm(@Valid @PathVariable int id) {
-        return  inMemoryFilmStorage.getFilm(id);
-//        log.info("field  with id={} deleted: {}", film.getId(), film.getClass());
-//        return film;
+        return filmService.getFilm(id);
     }
 
     @DeleteMapping
-    public Film delete(@Valid @RequestBody Film film) {
-        inMemoryFilmStorage.delete(film);
-        log.info("field  with id={} deleted: {}", film.getId(), film.getClass());
-        return film;
+    public void delete(@Valid @RequestBody Film film) {
+        filmService.delete(film);
     }
 
     @GetMapping
     public List<Film> list() {
-        log.info("current number of {}:", inMemoryFilmStorage.films.size());
-        return inMemoryFilmStorage.list();
+        return filmService.list();
     }
-//todo
+
     @PutMapping(value = "/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
-        inMemoryFilmStorage.addLike(id, userId);
+        filmService.addLike(id, userId);
     }
 
     @DeleteMapping(value = "/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId) {
-        inMemoryFilmStorage.deleteLike(id, userId);
+        filmService.deleteLike(id, userId);
     }
 
     @GetMapping(value = "/popular")
     public List<Film> topTen(@RequestParam(defaultValue = "10", required = false) int count) {
-        return inMemoryFilmStorage.topTen(count);
+        return filmService.topTen(count);
     }
 
     public static int idGenerator() {
-        id = inMemoryFilmStorage.films.size() + 1;
+        id = filmService.getUsersSize() + 1;
         return id;
     }
 }

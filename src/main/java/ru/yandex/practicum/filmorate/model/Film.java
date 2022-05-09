@@ -18,7 +18,6 @@ import java.util.Set;
 @Data
 @Validated
 public class Film implements Entities {
-   // @JsonIgnore
     private int id;
     @NonNull
     @NotBlank(message = "cannot be empty")
@@ -31,9 +30,7 @@ public class Film implements Entities {
     private LocalDate releaseDate;
     @Positive(message = "must be greater than 0")
     private int duration;
-  //  @JsonIgnore
     Set<String> likes = new HashSet<>();
-//    Set<Integer> likes = new HashSet<>();
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
         this.id = FilmController.idGenerator();

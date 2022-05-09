@@ -70,7 +70,7 @@ public class User implements Entities {
     }
 
     public void removeFriend(int friendId) {
-        this.friends.remove((Integer) friendId);
+        this.friends.remove(friendId);
     }
 
 }
