@@ -8,6 +8,7 @@
 Таблица Фильмов имеет схожую струтуру. Поле LikedList имеет уникальный ключ и содержит
 данные об идентификаторе фильма и пользователях, которые отметили данный данный фильм.
 
+![This is an image](https://github.com/Gidrosliv/javafilmorate/blob/add-friends-likes/src/main/resources/SQL.png?raw=true)
 https://github.com/Gidrosliv/javafilmorate/blob/add-friends-likes/src/main/resources/SQL.png?raw=true
 
 SELECT *
