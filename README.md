@@ -9,7 +9,8 @@
 данные об идентификаторе фильма и пользователях, которые отметили данный данный фильм.
 
 ![This is an image](https://github.com/Gidrosliv/javafilmorate/blob/add-friends-likes/src/main/resources/SQL.png?raw=true)
-https://github.com/Gidrosliv/javafilmorate/blob/add-friends-likes/src/main/resources/SQL.png?raw=true
+
+Типы связей обозначены условными обозначениями
 
 SELECT *
 FROM Film AS f;
