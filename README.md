@@ -26,6 +26,6 @@ FROM User;
 — Выводит все поля из таблицы User;
 
 SELECT *
-FROM FriendList
+FROM Friends
 WHERE user_id=1;
 — Выводит всех друзей пользователя c Id =1;
