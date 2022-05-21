@@ -5,21 +5,20 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.invalidFilmIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     public static final Map<Integer, Film> films = new HashMap<>();
-
+    private int id = 0;
     @Override
     public Film create(Film film) {
-        films.put(film.getId(), film);
+        Film NewFilm = new Film(id, film.getName(),film.getDescription(),film.getReleaseDate(),film.getDuration(), film.getMpa(),film.getGenres());
+        films.put(film.getId(), NewFilm);
+        id++;
         log.info("field with type {} and id={} added.", film.getClass(), film.getId());
-        return films.get(film.getId());
+        return films.get(NewFilm.getId());
     }
 
     @Override
@@ -40,6 +39,31 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void delete(Film film) {
         films.remove(film.getId());
         log.info("field  with id={} deleted: {}", film.getId(), film.getClass());
+    }
+
+    @Override
+    public Film getFilm(Integer id) {
+        if (!films.containsKey(id)) {
+            throw new invalidFilmIdException("фильм" + id);
+        }
+        return films.get(id);
+    }
+
+    @Override
+    public Integer addLike(Integer filmId, Integer userId) {
+        films.get(filmId).getLikes().add(userId);
+        return userId;
+    }
+
+    @Override
+    public Integer removeLike(Integer filmId, Integer userId) {
+        films.get(filmId).getLikes().remove(userId);
+        return userId;
+    }
+
+    @Override
+    public Collection<Film> getPopular(Integer count) {
+        return null;
     }
 
     public Film getFilm(int id) {

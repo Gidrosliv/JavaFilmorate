@@ -1,14 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.controllers.UserController;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -16,19 +15,24 @@ import java.util.Set;
 @Setter
 @ToString
 @Validated
-public class User implements Entities {
-    @NotBlank(message = "cannot be empty")
-    @Pattern(regexp = "\\S+")
+public class User {
+    @NonNull
     private String login;
     private String name;
     @Email
-    @NotBlank
+    @NonNull
     private String email;
-    @Past(message = "cannot be in the future")
+    @NonNull
+    @Past
     private LocalDate birthday;
-    @Positive(message = "must be greater than 0")
     private int id;
     Set<Integer> friends = new HashSet<>();
+    private Map<Integer, Boolean> friendStatus;
+    private Set<Integer> likedFilms;
+
+    public User() {
+        super();
+    }
 
     public User(String login, String name, String email, LocalDate birthday) {
         this.login = login;
@@ -39,8 +43,35 @@ public class User implements Entities {
         }
         this.email = email;
         this.birthday = birthday;
-        this.id = UserController.idGenerator();
     }
+
+    public User(int id, String login, String name, String email, LocalDate birthday) {
+        this.login = login;
+        if (name == null || name.isEmpty() || name.isBlank()) {
+            this.name = login;
+        } else {
+            this.name = name;
+        }
+        this.email = email;
+        this.birthday = birthday;
+        this.id = id;
+    }
+
+    public User(int id, String login, String name, String email, LocalDate birthday, Set<Integer> friends, Map<Integer, Boolean> friendStatus, Set<Integer> likedFilms) {
+        this.login = login;
+        if (name == null || name.isEmpty() || name.isBlank()) {
+            this.name = login;
+        } else {
+            this.name = name;
+        }
+        this.email = email;
+        this.birthday = birthday;
+        this.id = id;
+        this.friends = new HashSet<>();
+        this.friendStatus = new HashMap<>();
+        this.likedFilms = new HashSet<>();
+    }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -64,6 +95,13 @@ public class User implements Entities {
         return result;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public Set<Integer> getFriends() {
+        return friends;
+    }
 
     public void setFriends(int friendId) {
         this.friends.add(friendId);

@@ -12,30 +12,26 @@ import java.util.*;
 @Service
 public class UserService{
     InMemoryUserStorage inMemoryUserStorage;
-
-    UserService(InMemoryUserStorage inMemoryUserStorage) {
+    public UserService(InMemoryUserStorage inMemoryUserStorage) {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
     public User create(User user) {
         return inMemoryUserStorage.users.put(user.getId(), user);
     }
-
     public User update(User user) {
         return inMemoryUserStorage.update(user);
     }
-
-    public void delete(User user) {
-        inMemoryUserStorage.delete(user);
+    public void delete(int id) {
+        inMemoryUserStorage.delete(id);
     }
-
     public User getUser(int id) {
         return inMemoryUserStorage.getUser(id);
     }
-
     public Collection<User> list() {
         return inMemoryUserStorage.list();
     }
+
 
     public void addFriend(int id, int friendId) {
         if (id <= 0) {
@@ -128,6 +124,25 @@ public class UserService{
         return inMemoryUserStorage.users.size();
     }
 
+    public Set<Integer> getFriendList(int id) {
+        return inMemoryUserStorage.users.get(id).getFriends();
+    }
+
+    public void addToFriends(int id, int friendId) {
+        inMemoryUserStorage.addToFriends(id, friendId);
+    }
+
+    public Integer removeFromFriends(Integer id, Integer friendId) {
+        return inMemoryUserStorage.removeFromFriends(id, friendId);
+    }
+
+    public Collection<User> getUserFriends(Integer id) {
+        return inMemoryUserStorage.getUserFriends(id);
+    }
+
+    public Collection<User> getMutualFriends(Integer id, Integer otherId) {
+        return inMemoryUserStorage.getMutualFriends(id, otherId);
+    }
 }
 
 

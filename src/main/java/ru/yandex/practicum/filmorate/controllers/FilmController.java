@@ -1,12 +1,18 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.dao.FilmDbStorage;
+import ru.yandex.practicum.filmorate.exceptions.invalidFilmIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -15,56 +21,59 @@ import java.util.List;
 @RequestMapping(value = "/films")
 public class FilmController {
     static FilmService filmService;
-    static int id = 0;
+    static FilmStorage filmStorage;
 
-    FilmController(FilmService filmService) {
+    @Autowired
+    FilmController(FilmService filmService, @Qualifier("filmDbStorage") FilmStorage filmStorage) {
         this.filmService = filmService;
+        this.filmStorage = filmStorage;
     }
 
     @PostMapping
-    public Film create(@Valid @RequestBody Film film) {
-        filmService.create(film);
-        return film;
+    public Film create(@RequestBody Film film) {
+        return filmStorage.create(film);
     }
 
     @PutMapping
-    public Film update(@Valid @RequestBody Film film) {
-        filmService.update(film);
-        return film;
+    public Film update(@RequestBody Film film) {
+        if (film.getId() < 0) {
+            throw new invalidFilmIdException("cannot be negative");
+        }
+        return filmStorage.update(film);
     }
 
     @GetMapping(value = "/{id}")
     public Film getFilm(@Valid @PathVariable int id) {
-        return filmService.getFilm(id);
+        if (id < 0) {
+            throw new invalidFilmIdException("cannot be negative");
+        }
+        return filmStorage.getFilm(id);
     }
 
     @DeleteMapping
-    public void delete(@Valid @RequestBody Film film) {
-        filmService.delete(film);
+    public void delete(@RequestBody Film film) {
+        filmStorage.delete(film);
     }
 
     @GetMapping
     public List<Film> list() {
-        return filmService.list();
+        return filmStorage.list();
     }
 
     @PutMapping(value = "/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
-        filmService.addLike(id, userId);
+        filmStorage.addLike(id, userId);
     }
 
     @DeleteMapping(value = "/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId) {
-        filmService.deleteLike(id, userId);
+        filmStorage.removeLike(id, userId);
     }
 
     @GetMapping(value = "/popular")
-    public List<Film> topTen(@RequestParam(defaultValue = "10", required = false) int count) {
-        return filmService.topTen(count);
+    public Collection<Film> getPopular(@RequestParam(defaultValue = "10", required = false) int count) {
+        return filmStorage.getPopular(count);
     }
 
-    public static int idGenerator() {
-        id = filmService.getUsersSize() + 1;
-        return id;
-    }
+
 }
