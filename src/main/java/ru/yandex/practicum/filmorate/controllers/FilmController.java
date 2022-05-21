@@ -35,7 +35,7 @@ public class FilmController {
 
     @GetMapping(value = "/{id}")
     public Film getFilm(@Valid @PathVariable int id) {
-        return filmService.getFilm(id);
+        return filmService.getSomething(id);
     }
 
     @DeleteMapping

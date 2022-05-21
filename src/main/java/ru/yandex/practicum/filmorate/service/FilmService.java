@@ -36,7 +36,7 @@ public class FilmService {
         inMemoryFilmStorage.delete(film);
     }
 
-    public Film getFilm(int id) {
+    public Film getSomething(int id) {
         return inMemoryFilmStorage.getFilm(id);
     }
 
@@ -97,4 +97,6 @@ public class FilmService {
         log.info("got a list of sizes");
         return inMemoryFilmStorage.films.size();
     }
+
+
 }
