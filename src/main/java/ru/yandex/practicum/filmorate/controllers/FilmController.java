@@ -29,12 +29,12 @@ public class FilmController {
         this.filmStorage = filmStorage;
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping
     public Film create(@RequestBody Film film) {
         return filmStorage.create(film);
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping
     public Film update(@RequestBody Film film) {
         if (film.getId() < 0) {
             throw new invalidFilmIdException("cannot be negative");
