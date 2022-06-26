@@ -34,8 +34,6 @@ public class FilmDbStorage implements FilmStorage {
     private static final String SQL_ADD_GENRE = "INSERT INTO FilmGenre(film_id, genre_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_FILM = "UPDATE Film SET name = ?, description = ?, release_date = ?, " +
             "duration = ?, mpa = ? WHERE film_id = ?";
-    private static final String SQL_DELETE_GENRE = "DELETE FROM FilmGenre WHERE film_id = ?";
-    private static final String SQL_UPDATE_GENRE = "INSERT INTO FilmGenre(film_id, genre_id) VALUES(?, ?)";
     private static final String SQL_DELETE_FILM = "DELETE FROM Film WHERE film_id = ?";
     private static final String SQL_GET_FILM = "SELECT * FROM Film AS f LEFT JOIN likes AS l ON f.film_id = " +
             "l.film_id WHERE f.film_id = ? GROUP BY f.film_id, l.id";
@@ -47,10 +45,12 @@ public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
     private final LikesDao likesDao;
+    private final GenreDao genreDao;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, LikesDao likesDao) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, LikesDao likesDao, GenreDao genreDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.likesDao = likesDao;
+        this.genreDao = genreDao;
     }
 
     @Override
@@ -81,14 +81,14 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDuration(), film.getMpa().getId(), film.getId());
         log.debug("Movie updated {}.", film);
         if (film.getGenres() == null || film.getGenres().isEmpty()) {
-            jdbcTemplate.update(SQL_DELETE_GENRE, film.getId());
+            genreDao.deleteGenre(film.getId());
             return film;
         }
         for (Genre genre : film.getGenres()) {
-            jdbcTemplate.update(SQL_DELETE_GENRE, film.getId());
+            genreDao.deleteGenre(film.getId());
         }
         for (Genre genre : film.getGenres()) {
-            jdbcTemplate.update(SQL_UPDATE_GENRE, film.getId(), genre.getId());
+            genreDao.updateGenre(film.getId(), genre.getId());
         }
         return film;
     }
@@ -121,7 +121,6 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public void delete(Film film) {
         jdbcTemplate.update(SQL_DELETE_FILM, film.getId());
-        jdbcTemplate.update(SQL_DELETE_GENRE, film.getId());
         log.debug("Removed movie{}.", film.getId());
     }
 

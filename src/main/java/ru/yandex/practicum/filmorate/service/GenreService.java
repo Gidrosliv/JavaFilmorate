@@ -24,7 +24,6 @@ public class GenreService {
         }
         return genreDao.getGenreById(id);
     }
-
     public Collection<Genre> getAllGenres() {
         return genreDao.getAllGenres();
     }

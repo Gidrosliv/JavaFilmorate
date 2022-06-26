@@ -12,6 +12,8 @@ import java.util.Collection;
 public class GenreDao {
     private static final String SQL_GET_GENRE_BY_ID = "SELECT genre_id FROM Genre WHERE genre_id = ?";
     private static final String SQL_GET_ALL_GENRES = "SELECT genre_id FROM Genre";
+    private static final String SQL_DELETE_GENRE = "DELETE FROM FilmGenre WHERE film_id = ?";
+    private static final String SQL_UPDATE_GENRE = "INSERT INTO FilmGenre(film_id, genre_id) VALUES(?, ?)";
     private final JdbcTemplate jdbcTemplate;
 
     public GenreDao(JdbcTemplate jdbcTemplate) {
@@ -25,6 +27,16 @@ public class GenreDao {
             return new Genre(rowSet.getInt("genre_id"));
         }
         return new Genre(0);
+    }
+
+    public void deleteGenre (int id) {
+        log.debug("All genres requested.");
+        jdbcTemplate.update(SQL_DELETE_GENRE, id);
+    }
+
+    public void updateGenre(int filmId, int genreId) {
+        log.debug("All genres requested.");
+        jdbcTemplate.update(SQL_UPDATE_GENRE, filmId, genreId);
     }
 
     public Collection<Genre> getAllGenres() {

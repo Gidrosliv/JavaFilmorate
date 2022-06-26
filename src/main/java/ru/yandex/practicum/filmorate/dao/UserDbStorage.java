@@ -53,9 +53,6 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        if (user.getId() < 0) {
-            throw new InvalidUserIdException("cannot be negative");
-        }
         jdbcTemplate.update(SQL_GET_UPDATED_USER, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(),
                 user.getId());
         log.debug("Updated user {}.", user.getId());
@@ -67,6 +64,11 @@ public class UserDbStorage implements UserStorage {
     public void delete(int id) {
         String sqlQuery = ("DELETE FROM Person WHERE ID = ?");
         jdbcTemplate.update(sqlQuery, id);
+    }
+
+    @Override
+    public Collection<User> list() {
+        return null;
     }
 
     @Override
@@ -86,7 +88,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User addToFriends(int id, int friendId) {
+    public User addFriend(int id, int friendId) {
         return friendDao.addToFriends(id, friendId);
     }
 

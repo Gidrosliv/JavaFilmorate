@@ -14,15 +14,15 @@ public interface UserStorage {
 
     void delete(int id);
 
-//    Collection<User> list();
+    Collection<User> list();
 
     Map<Integer, User> getAllUsers();
-
-    User addToFriends(int id, int friendId);
 
     Integer removeFromFriends(Integer id, Integer friendId);
 
     Collection<User> getUserFriends(Integer id);
 
     Collection<User> getMutualFriends(Integer id, Integer otherId);
+
+    User addFriend(int id, int friendId);
 }

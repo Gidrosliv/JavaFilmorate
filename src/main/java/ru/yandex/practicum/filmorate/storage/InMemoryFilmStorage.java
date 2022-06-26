@@ -2,10 +2,12 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.InvalidCountException;
 import ru.yandex.practicum.filmorate.exceptions.invalidFilmIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -51,28 +53,45 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Integer addLike(Integer filmId, Integer userId) {
+        if (id <= 0) {
+            throw new invalidFilmIdException("The user ID cannot be negative.");
+        }
+        if (userId <= 0) {
+            throw new invalidFilmIdException("The user ID cannot be negative.");
+        }
+
+        log.info("field  with id={} liked by: {}", id, userId);
         films.get(filmId).getLikes().add(userId);
         return userId;
     }
 
+
     @Override
     public Integer removeLike(Integer filmId, Integer userId) {
+        if (id <= 0) {
+            throw new invalidFilmIdException("The user ID cannot be negative.");
+        }
+        if (userId <= 0) {
+            throw new invalidFilmIdException("The user ID cannot be negative.");
+        }
         films.get(filmId).getLikes().remove(userId);
+        log.info("field  with id={} unliked by: {}", id, userId);
         return userId;
     }
 
     @Override
     public Collection<Film> getPopular(Integer count) {
-        return null;
+        if (count <= 0) {
+            throw new InvalidCountException("The count cannot be negative.");
+        }
+        List<Film> unsortedMap = new ArrayList<>(films.values());
+        List<Film> topTen = unsortedMap.stream()
+                .sorted((o1, o2) -> o2.getLikes().size() - o1.getLikes().size())
+                .limit(count).collect(Collectors.toList());
+        log.info("field count={} best films", count);
+        return topTen;
     }
 
-    public Film getFilm(int id) {
-        if (id < 0) {
-            throw new invalidFilmIdException("The user ID cannot be negative.");
-        }
-        log.info("field  with id={}", id);
-        return films.get(id);
-    }
 
     @Override
     public List<Film> list() {

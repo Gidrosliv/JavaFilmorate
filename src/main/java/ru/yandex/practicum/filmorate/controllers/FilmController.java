@@ -20,59 +20,51 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/films")
 public class FilmController {
-    static FilmService filmService;
-    static FilmStorage filmStorage;
+    private final FilmService filmService;
 
     @Autowired
-    FilmController(FilmService filmService, @Qualifier("filmDbStorage") FilmStorage filmStorage) {
+    FilmController(FilmService filmService) {
         this.filmService = filmService;
-        this.filmStorage = filmStorage;
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        return filmStorage.create(film);
+        return filmService.create(film);
     }
 
     @PutMapping
     public Film update(@RequestBody Film film) {
-        if (film.getId() < 0) {
-            throw new invalidFilmIdException("cannot be negative");
-        }
-        return filmStorage.update(film);
+        return filmService.update(film);
     }
 
     @GetMapping(value = "/{id}")
     public Film getFilm(@Valid @PathVariable int id) {
-        if (id < 0) {
-            throw new invalidFilmIdException("cannot be negative");
-        }
-        return filmStorage.getFilm(id);
+        return filmService.getFilm(id);
     }
 
     @DeleteMapping
     public void delete(@RequestBody Film film) {
-        filmStorage.delete(film);
+        filmService.delete(film);
     }
 
     @GetMapping
     public List<Film> list() {
-        return filmStorage.list();
+        return filmService.list();
     }
 
     @PutMapping(value = "/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
-        filmStorage.addLike(id, userId);
+        filmService.addLike(id, userId);
     }
 
     @DeleteMapping(value = "/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId) {
-        filmStorage.removeLike(id, userId);
+        filmService.removeLike(id, userId);
     }
 
     @GetMapping(value = "/popular")
     public Collection<Film> getPopular(@RequestParam(defaultValue = "10", required = false) int count) {
-        return filmStorage.getPopular(count);
+        return filmService.getPopular(count);
     }
 
 
