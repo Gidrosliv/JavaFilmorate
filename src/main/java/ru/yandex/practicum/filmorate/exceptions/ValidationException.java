@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.yandex.practicum.filmorate.dto.Response;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,5 +35,10 @@ public class ValidationException extends Exception {
                 .map(error -> new Response(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(violations, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ElementNotFoundException.class)
+    public void springHandleNotFound(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.NOT_FOUND.value());
     }
 }
