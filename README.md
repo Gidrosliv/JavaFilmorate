@@ -1,34 +1,57 @@
-java-filmorate
-========================
+# Приложение для поиска и хранения фильмов. Java-filmorate.
+#### Учебный проект
+    
+    
 [![Films API Tests](https://github.com/Gidrosliv/javafilmorate/actions/workflows/api-tests.yml/badge.svg)](https://github.com/Gidrosliv/javafilmorate/actions/workflows/api-tests.yml)
+        
+Описание:
+Бэкенд для сервиса, который будет работать с фильмами и оценками пользователей, а также возвращать топ фильмов, рекомендованных к просмотру.
+    
+Реализовано:
+- хранение данных в памяти;
+- хранение данных в файле;
+- хранение дыных в базе данны;
+- локальный сервер, проверяющий ключ доступа;
+- доступ к методам менеджера через HTTP-запросы.
 
-Таблица User, включает в себя поля cоответствующие классу (name, id, login и т.д),
-за исключением списков друзей, т.к SQL не может содержать массивы данных.
-Поэтому мы представляем список друзей в качестве отдельной таблицы, где для каждого уникального номера списка хронятся 
-идентификаторы добавленных пользователей и статусы  (статусы связанны с таблицей status по полю status_id). 
-Данный подход позволяет получить список друзей по уникальному полю friendList_id.
+Используемые технологии:
 
-Таблица Фильмов имеет схожую струтуру. Поле LikedList имеет уникальный ключ и содержит
-данные об идентификаторе фильма и пользователях, которые отметили данный данный фильм.
 
-![This is an image](https://github.com/Gidrosliv/javafilmorate/blob/add-friends-likes/src/main/resources/dateBase.png?raw=true)
+Схема Базы данных:
+![This is an image](https://github.com/Gidrosliv/java-filmorate/blob/main/src/main/resources/schemaNew.png)
 
-Типы связей обозначены условными обозначениями
+#### Выводит все поля из таблицы Film; 
+``` 
+SELECT film_id, name, description, release_date, duration, mpa
+FROM Film
+```
 
-SELECT *
-FROM Film AS f;
-— Выводит все поля из таблицы Film;
+#### Выводит все поля у фильма с Id = ?
+```
+SELECT * 
+FROM Film AS f LEFT JOIN likes AS l ON f.film_id = l.film_id 
+WHERE f.film_id = ? 
+GROUP BY f.film_id, l.id;
+```
 
-SELECT *
-FROM Film  AS f
-WHERE Film_Id =1;
-— Выводит все поля у фильма с Id =1;
+#### Выводит топ-х фильмов, где х =?
+```
+SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa, l.id 
+FROM likes AS l 
+RIGHT JOIN Film AS f ON f.film_id = l.film_id 
+GROUP BY f.film_id, l.id 
+ORDER BY COUNT(l.id) DESC LIMIT ?
+```
 
-SELECT *
-FROM User;
-— Выводит все поля из таблицы User;
+#### Выводит список общих друзей между пользователями с id = ?
+```
+SELECT f.friend_id, u.id, u.email, u.login, u.name, u.birthday 
+FROM friends AS f 
+LEFT JOIN friends AS fr ON f.friend_id = fr.friend_id 
+INNER JOIN Person AS u ON f.friend_id = u.id 
+WHERE f.id = ? AND fr.id = ? 
+GROUP BY f.friend_id;
+```
 
-SELECT *
-FROM Friends
-WHERE user_id=1;
-— Выводит всех друзей пользователя c Id =1;
+
+
