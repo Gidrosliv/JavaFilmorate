@@ -1,7 +1,6 @@
 java-filmorate
 ========================
-Учебный проект.
-
+![API Tests](https://github.com/agluh/java-shareit/actions/workflows/api-tests.yml/badge.svg)
 
 Таблица User, включает в себя поля cоответствующие классу (name, id, login и т.д),
 за исключением списков друзей, т.к SQL не может содержать массивы данных.
