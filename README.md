@@ -14,8 +14,6 @@
 - локальный сервер, проверяющий ключ доступа;
 - доступ к методам менеджера через HTTP-запросы.
 
-Используемые технологии:
-
 
 Схема Базы Данных:
 ![This is an image](https://github.com/Gidrosliv/java-filmorate/blob/main/src/main/resources/schemaNew.png)
