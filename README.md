@@ -17,7 +17,7 @@
 Используемые технологии:
 
 
-Схема Базы данных:
+Схема Базы Данных:
 ![This is an image](https://github.com/Gidrosliv/java-filmorate/blob/main/src/main/resources/schemaNew.png)
 
 #### Выводит все поля из таблицы Film; 
