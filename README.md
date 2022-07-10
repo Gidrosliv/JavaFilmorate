@@ -1,6 +1,6 @@
 java-filmorate
 ========================
-![API Tests](https://github.com/agluh/java-shareit/actions/workflows/api-tests.yml/badge.svg)
+[![Films API Tests](https://github.com/Gidrosliv/javafilmorate/actions/workflows/api-tests.yml/badge.svg)](https://github.com/Gidrosliv/javafilmorate/actions/workflows/api-tests.yml)
 
 Таблица User, включает в себя поля cоответствующие классу (name, id, login и т.д),
 за исключением списков друзей, т.к SQL не может содержать массивы данных.
