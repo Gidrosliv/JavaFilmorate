@@ -1,6 +1,5 @@
 java-filmorate
 ========================
-https://github.com/agluh/java-filmorate/actions/workflows/api-tests.yml/badge.svg
 #Учебный проект.
 
 Таблица User, включает в себя поля cоответствующие классу (name, id, login и т.д),
