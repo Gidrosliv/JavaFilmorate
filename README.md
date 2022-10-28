@@ -74,5 +74,3 @@ GROUP BY f.friend_id;
 
 <a href="#" onClick="scroll(0,0); return false" title="наверх">вверх страницы</a>
 
-
-
