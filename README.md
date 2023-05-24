@@ -1,5 +1,5 @@
 # FilmoRate. Приложение для поиска фильмов и работы с оценками пользователей.
-###### Пэт проект в рамках прохождения учебного курса Яндекс.
+###### Пэт проект в рамках учебной программы Яндекс.
     
     
 [![Films API Tests](https://github.com/Gidrosliv/javafilmorate/actions/workflows/api-tests.yml/badge.svg)](https://github.com/Gidrosliv/javafilmorate/actions/workflows/api-tests.yml)
